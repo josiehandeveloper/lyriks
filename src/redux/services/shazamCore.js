@@ -1,40 +1,38 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const shazamCoreApi = createApi({
-  reducerPath: "shazamCoreApi",
+  reducerPath: 'shazamCoreApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://shazam-core.p.rapidapi.com/",
+    baseUrl: 'https://shazam-core.p.rapidapi.com/',
     prepareHeaders: (headers) => {
       headers.set(
-        "X-RapidAPI-Key",
-        "6a5710b987msh0943a7d38d91630p1e46b5jsn88519ffc22fb"
+        'X-RapidAPI-Key',
+        import.meta.env.VITE_SHAZAM_CORE_RAPID_API_KEY
       );
+
       return headers;
     },
   }),
   endpoints: (builder) => ({
-    getTopCharts: builder.query({
-      query: () => `v1/charts/genre-world?genre_code=POP`,
-    }),
+    getTopCharts: builder.query({ query: () => 'v1/charts/world' }),
     getSongsByGenre: builder.query({
-      query: (genre) => `/v1/charts/genre-world?genre_code=${genre} `,
+      query: (genre) => `v1/charts/genre-world?genre_code=${genre}`,
     }),
-    getByCountry: builder.query({
-      query: () => `/v1/charts/genre-country?country_code=US&genre_code=POP `,
+    getSongsByCountry: builder.query({
+      query: (countryCode) => `v1/charts/country?country_code=${countryCode}`,
     }),
-
+    getSongsBySearch: builder.query({
+      query: (searchTerm) =>
+        `v1/search/multi?search_type=SONGS_ARTISTS&query=${searchTerm}`,
+    }),
+    getArtistDetails: builder.query({
+      query: (artistId) => `v2/artists/details?artist_id=${artistId}`,
+    }),
     getSongDetails: builder.query({
       query: ({ songid }) => `v1/tracks/details?track_id=${songid}`,
     }),
     getSongRelated: builder.query({
       query: ({ songid }) => `v1/tracks/related?track_id=${songid}`,
-    }),
-    getArtistDetails: builder.query({
-      query: ({ artistId }) => `v2/artists/details?artist_id=${artistId}`,
-    }),
-    getSongsBySearch: builder.query({
-      query: (searchTerm) =>
-        `v1/search/multi?search_type=SONGS_ARTISTS&query=${searchTerm}`,
     }),
   }),
 });
@@ -42,9 +40,9 @@ export const shazamCoreApi = createApi({
 export const {
   useGetTopChartsQuery,
   useGetSongsByGenreQuery,
+  useGetSongsByCountryQuery,
+  useGetSongsBySearchQuery,
+  useGetArtistDetailsQuery,
   useGetSongDetailsQuery,
   useGetSongRelatedQuery,
-  useGetArtistDetailsQuery,
-  useGetByCountryQuery,
-  useGetSongsBySearchQuery,
 } = shazamCoreApi;
